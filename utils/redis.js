@@ -14,12 +14,7 @@ class RedisClient {
   }
 
   isAlive() {
-    try {
-      this.client.ping();
-      return true;
-    } catch (err) {
-      return false;
-    }
+    return this.client.connected;
   }
 
   async get(key) {
@@ -27,11 +22,11 @@ class RedisClient {
   }
 
   async set(key, value, duration) {
-    return this.setAsync(key, value, 'EX', duration);
+    this.setAsync(key, value, 'EX', duration);
   }
 
   async del(key) {
-    return this.delAsync(key);
+    this.delAsync(key);
   }
 }
 
