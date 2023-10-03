@@ -9,16 +9,15 @@ class DBClient {
   constructor() {
     this.client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     this.connected = false; // Initialize the connected status as false
-    this.connect()
-
+    this.connect();
   }
 
   async connect() {
     try {
       await this.client.connect();
-      this.connected = true
+      this.connected = true;
     } catch (error) {
-      this.connected = false
+      this.connected = false;
     }
   }
 
@@ -37,7 +36,7 @@ class DBClient {
   async nbFiles() {
     const db = this.client.db();
     const files = db.collection('files');
-    const count = files.countDocuments();
+    const count = await files.countDocuments();
 
     return count;
   }
