@@ -1,10 +1,10 @@
 const express = require('express');
-// const indexRoute = require('./routes/index');
+const indexRoute = require('./routes/index');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-const indexRoute = require('./routes/index');
+app.use(express.json());
 
 // Use the router as middleware
 app.use('/', indexRoute);
