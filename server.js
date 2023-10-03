@@ -9,6 +9,6 @@ const indexRoute = require('./routes/index');
 // Use the router as middleware
 app.use('/', indexRoute);
 
-app.listen('5000', () => {
-  console.log('server is running on port 5000');
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
