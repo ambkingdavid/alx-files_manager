@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const sha1 = require('sha1');
 const dbClient = require('../utils/db');
 
 class UsersController {
@@ -17,8 +17,7 @@ class UsersController {
     if (existingUser) {
       return response.status(400).send({ error: 'Already exist' });
     }
-    const hashedPassword = crypto.createHash('sha1').update(password).digest('hex');
-
+    const hashedPassword = sha1(password);
     const newUser = {
       email,
       password: hashedPassword,
