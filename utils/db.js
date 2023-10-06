@@ -40,6 +40,14 @@ class DBClient {
 
     return count;
   }
+
+  async findUser(email) {
+    const db = this.client.db();
+    const users = db.collection('users');
+    const user = await users.findOne({ email });
+
+    return user;
+  }
 }
 
 const dbClient = new DBClient();

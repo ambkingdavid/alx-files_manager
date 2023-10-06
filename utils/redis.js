@@ -17,16 +17,17 @@ class RedisClient {
     return this.client.connected;
   }
 
+
   async get(key) {
     return this.getAsync(key);
   }
 
   async set(key, value, duration) {
-    this.setAsync(key, value, 'EX', duration);
+    return this.setAsync(key, value, 'EX', duration);
   }
 
   async del(key) {
-    this.delAsync(key);
+    return this.delAsync(key);
   }
 }
 
