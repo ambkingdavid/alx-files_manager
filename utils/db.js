@@ -56,6 +56,20 @@ class DBClient {
 
     return user;
   }
+
+  async findFileByParentId(parentId) {
+    const files = this.client.db().collection('files');
+    const file = await files.findOne({ _id: new ObjectId(parentId) });
+
+    return file;
+  }
+
+  async addFile(file) {
+    const files = this.client.db().collection('files');
+    const result = await files.insertOne(file);
+
+    return result.insertedId;
+  }
 }
 
 const dbClient = new DBClient();
