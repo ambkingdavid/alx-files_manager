@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 const host = process.env.DB_HOST || 'localhost';
 const port = process.env.DB_PORT || 27017;
@@ -41,12 +42,19 @@ class DBClient {
     return count;
   }
 
-  async findUser(email) {
+  async findUserByEmail(email) {
     const db = this.client.db();
     const users = db.collection('users');
     const user = await users.findOne({ email });
 
     return user;
+  }
+
+  async findUserById(id) {
+    const users = this.client.db().collection('users');
+    const user = await users.findOne({ _id: new ObjectId(id) });
+
+    return user
   }
 }
 
