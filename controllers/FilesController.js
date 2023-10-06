@@ -62,8 +62,8 @@ class FilesController {
         userId: ObjectId(userId),
         name,
         type,
-        isPublic: isPublic || false,
-        parentId: parentId || 0,
+        isPublic: isPublic !== undefined ? isPublic : false,
+        parentId: parentId ? ObjectId(parentId) : 0,
       };
       const fileId = await dbClient.addFile(newFile);
       newFile.id = fileId;
@@ -72,8 +72,8 @@ class FilesController {
         userId,
         name,
         type,
-        isPublic,
-        parentId,
+        isPublic: newFile.isPublic,
+        parentId: newFile.parentId,
       };
 
       return res.status(201).send(file);
@@ -96,8 +96,8 @@ class FilesController {
       userId: ObjectId(userId),
       name,
       type,
-      isPublic: isPublic || false,
-      parentId: ObjectId(parentId) || 0,
+      isPublic: isPublic !== undefined ? isPublic : false,
+      parentId: parentId ? ObjectId(parentId) : 0,
       localPath,
     };
     const fileId = await dbClient.addFile(newFile);
@@ -107,8 +107,8 @@ class FilesController {
       userId,
       name,
       type,
-      isPublic,
-      parentId,
+      isPublic: newFile.isPublic,
+      parentId: newFile.parentId,
       localPath,
     };
 
