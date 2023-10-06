@@ -35,15 +35,15 @@ class FilesController {
     } = req.body;
 
     if (!name) {
-      return res.status(400).send({ error: 'Missing type' });
+      return res.status(400).send({ error: 'Missing name' });
     }
 
     if (!type || !['folder', 'file', 'image'].includes(type)) {
-      res.status(400).send({ error: 'Missing type' });
+      return res.status(400).send({ error: 'Missing type' });
     }
 
     if (!data && type !== 'folder') {
-      res.status(400).send({ error: 'Missing data' });
+      return res.status(400).send({ error: 'Missing data' });
     }
 
     if (parentId && type !== 'folder') {
