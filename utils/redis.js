@@ -17,7 +17,6 @@ class RedisClient {
     return this.client.connected;
   }
 
-
   async get(key) {
     return this.getAsync(key);
   }

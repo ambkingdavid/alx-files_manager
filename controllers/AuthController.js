@@ -8,30 +8,33 @@ class AuthController {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Basic ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      return res.status(401).send({ error: 'Unauthorized' });
     }
 
     // Extract and decode the email and password
-    const base64Credentials = authHeader.slice('Basic '.length);
-    const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8').split(':');
-    const email = credentials[0];
-    const password = credentials[1];
+    try {
+      const base64Credentials = authHeader.slice('Basic '.length);
+      const credentials = Buffer.from(base64Credentials, 'base64').toString('utf-8').split(':');
+      const email = credentials[0];
+      const password = credentials[1];
+      const hashedPassword = sha1(password);
 
-    const hashedPassword = sha1(password);
+      const user = await dbClient.findUserByEmail(email);
 
-    const user = await dbClient.findUserByEmail(email);
+      if (!user || user.password !== hashedPassword) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
 
-    if (!user || user.password !== hashedPassword) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      const token = uuidv4();
+      const key = `auth_${token}`;
+      const value = user._id.toString();
+
+      await redisClient.set(key, value, 24 * 3600);
+
+      return res.status(200).send({ token });
+    } catch (error) {
+      return res.status(401).send({ error: 'Unauthorized' });
     }
-
-    const token = uuidv4();
-    const key = `auth_${token}`;
-    const value = user._id.toString();
-
-    await redisClient.set(key, value, 24 * 3600);
-
-    return res.status(200).send({ token });
   }
 
   static async getDisconnect(req, res) {
@@ -43,7 +46,12 @@ class AuthController {
 
     const key = `auth_${authToken}`;
 
-    await redisClient.del(key);
+    const result = await redisClient.del(key);
+
+    if (!result) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     return res.status(204).send();
   }
 }

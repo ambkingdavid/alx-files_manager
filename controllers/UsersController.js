@@ -46,7 +46,7 @@ class UsersController {
     }
 
     const userObj = {
-      id: user.insertedId,
+      id: user._id,
       email: user.email,
     };
 

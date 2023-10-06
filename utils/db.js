@@ -54,7 +54,7 @@ class DBClient {
     const users = this.client.db().collection('users');
     const user = await users.findOne({ _id: new ObjectId(id) });
 
-    return user
+    return user;
   }
 }
 
