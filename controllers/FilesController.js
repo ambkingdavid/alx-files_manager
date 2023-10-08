@@ -129,7 +129,7 @@ class FilesController {
       userId: ObjectId(userId),
     });
     if (!file) {
-      return res.status(404).send({ error: 'Not Found' });
+      return res.status(404).send({ error: 'Not found' });
     }
 
     return res.send(file);
