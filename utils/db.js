@@ -64,11 +64,46 @@ class DBClient {
     return file;
   }
 
+  async findFolderByParentId(parentId) {
+    const files = this.client.db().collection('files');
+    const file = await files.findOne({
+      parentId: new ObjectId(parentId),
+      type: 'folder',
+    });
+
+    return file;
+  }
+
   async addFile(file) {
     const files = this.client.db().collection('files');
     const result = await files.insertOne(file);
 
     return result.insertedId;
+  }
+
+  async getUserFiles(query) {
+    const files = this.client.db().collection('files');
+    const userFiles = await files.find(query);
+
+    return userFiles.toArray();
+  }
+
+  async getPage(query, page, limit) {
+    const files = this.client.db().collection('files');
+    const pipeline = [
+      {
+        $match: query,
+      },
+      {
+        $skip: page * limit,
+      },
+      {
+        $limit: limit,
+      },
+    ];
+    const userFiles = await files.aggregate(pipeline).toArray();
+
+    return userFiles;
   }
 }
 
