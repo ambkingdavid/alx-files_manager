@@ -123,12 +123,12 @@ class FilesController {
       return res.status(401).send({ error: 'Unauthorized' });
     }
 
-    const fileId = ObjectId(req.params.id);
+    const folderId = req.params.id;
     const file = await dbClient.getUserFiles({
-      _id: ObjectId(fileId),
-      userId: ObjectId(userId),
+      _id: new ObjectId(folderId),
+      userId: new ObjectId(userId),
     });
-    if (!file) {
+    if (file.length === 0) {
       return res.status(404).send({ error: 'Not found' });
     }
 
@@ -149,7 +149,7 @@ class FilesController {
     if (parentId !== 0) {
       const folder = await dbClient.findFileByParentId(parentId);
       if (!folder) {
-        return res.send([]);
+        return res.send();
       }
       const files = await dbClient.getPage({
         userId: ObjectId(userId),
